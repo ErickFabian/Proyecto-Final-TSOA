@@ -71,7 +71,7 @@ public class ProcesoServidor extends Proceso{
                 Nucleo.send(merge_bytes_int(solServidor),respServidor);
                 imprimeln("Respuesta de servidor enviada");
             }
-            ConectorDNS.deregistrarInterfaz("Server", "1.0", idUnico);
+            ConectorDNS.deregistrarInterfaz("Server Erick", "1.0", idUnico);
     }
         
         public void unpack_message(byte[] solServidor){

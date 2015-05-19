@@ -35,7 +35,7 @@ public class ProcesoCliente extends Proceso{
         imprimeln("Generando mensaje a ser enviado, llenando los campos necesarios");
         pack_request(solCliente);
         imprimeln("Señalamiento al nucleo para envio de mensaje");
-        String server_name = "Server";
+        String server_name = "Server Erick";
         Nucleo.send(server_name,solCliente);
         imprimeln("Invocando Receive");
         Nucleo.receive(dameID(),respCliente);
