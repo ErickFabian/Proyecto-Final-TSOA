@@ -117,8 +117,6 @@ public final class MicroNucleo extends MicroNucleoBase{
    * Para el(la) encargad@ de direccionamiento por servidor de nombres en pr�ctica 5  
    */
   protected void sendVerdadero(String dest,byte[] message){
-//    System.out.println("In MIcroNucleo Dest must be Server == "+dest);
-//    System.out.println("Sanity Check message"+Arrays.toString(message));
     int id = ConectorDNS.importarInterfaz(dest);
     pack_request(super.dameIdProceso(),id,message);
     DatagramPacket dp = null;

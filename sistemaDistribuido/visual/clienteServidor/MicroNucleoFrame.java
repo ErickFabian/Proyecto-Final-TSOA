@@ -116,16 +116,12 @@ public class MicroNucleoFrame extends Frame implements WindowListener, Escribano
             } else if (com.equals("Servidor de Nombres")) {
                 conector.setVisible(true);
                 panelBotones.dameBotonServidorNombres().setEnabled(false);
-            }else
-            	if(com.equals("Cliente Alex"))
-            	{
-            	 levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ClienteFrame(MicroNucleoFrame.this));
-            	}
-            else
-            	if(com.equals("Servidor Alex"))
-            	{
-            	 levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ServidorFrame(MicroNucleoFrame.this));
-            	}
+            }else if(com.equals("Cliente Alex")){
+                levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ClienteFrame(MicroNucleoFrame.this));
+            }
+            else if(com.equals("Servidor Alex")){
+                levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ServidorFrame(MicroNucleoFrame.this));
+            }
         }          
     }
 

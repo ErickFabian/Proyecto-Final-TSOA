@@ -76,7 +76,7 @@ public class ProcesoServidor extends Proceso{
                 imprimeln("llenando los campos necesarios");
                 imprimeln("Señalando al núcleo para ser envío de mensaje");
                 imprimeln("enviando respuesta");
-                Nucleo.send(((int)solServidor[0]),respServidor);
+                Nucleo.send(merge_bytes_int(solServidor),respServidor);
             }
             
             ConectorDNS.deregistrarInterfaz("Server Alex", "1.0", idUnico);
