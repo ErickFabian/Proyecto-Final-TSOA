@@ -24,7 +24,9 @@ public class ConectorDNS {
 	}
 
 	public static int importarInterfaz(String nombreServidor){
+		    System.out.println(nombreServidor);
             ParMaquinaProceso asa=conector.busqueda(nombreServidor);
+            System.out.println(asa.dameID());
             return asa.dameID();
 	}
 

@@ -53,9 +53,6 @@ public class ProcesoCliente extends Proceso{
             for(i=0,contador=10;i<tope;i++,contador++)
              respuesta=respuesta+((char)respCliente[contador]);
             imprimeln("Resultado de la operacion: ");
-             if(((int) respCliente[1023])!=1 && ((int) respCliente[1023])!=-1)
-              imprimeln("AU");
-             else
               imprimeln(respuesta);
         }
 }

@@ -11,7 +11,7 @@ public class ServidorFrame extends ProcesoFrame{
   private ProcesoServidor proc;
 
   public ServidorFrame(MicroNucleoFrame frameNucleo){
-    super(frameNucleo,"Servidor de Archivos");
+    super(frameNucleo,"Servidor de Archivos Erick");
     proc=new ProcesoServidor(this);
     fijarProceso(proc);
   }

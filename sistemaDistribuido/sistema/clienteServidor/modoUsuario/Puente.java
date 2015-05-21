@@ -73,6 +73,7 @@ public class Puente{
     
     public ParMaquinaProceso busqueda(String nombreServidor) {
         ParMaquinaProceso [] servidores =new  ParMaquinaProceso [conexiones.size()];
+        ParMaquinaProceso ser=null;
         Servidor server = null;
         int i=0;
         lista=conexiones.keySet();
@@ -80,13 +81,15 @@ public class Puente{
             server= conexiones.get(key);
             if (server.dameNombreServidor().equalsIgnoreCase(nombreServidor))
             {
-                servidores[i] = server;
-                i++;
+                //servidores[i] = server;
+                //i++;
+            	ser=server;
             }
         }
-        Random rn = new Random();
-        int random_n = rn.nextInt(servidores.length - 1 + 1);
-        return servidores[random_n];
+        /*Random rn = new Random();
+        int random_n = rn.nextInt(servidores.length - 1 + 1);*/
+        //return servidores[random_n];
+        return ser;
     }
     
     class Servidor implements ParMaquinaProceso{
