@@ -21,6 +21,7 @@ public class Nucleo{
 	public static void iniciarSistema(Escribano wri, int puertoEntrada) {
 		nucleo.iniciarSistema(wri, puertoEntrada);
 	}
+	
 
 	public static void receive(int addr, byte[] message) {
 		nucleo.receive(addr, message);
@@ -80,7 +81,12 @@ public class Nucleo{
 		nucleo.iniciarSistema(wri, puertoEntrada);
 	}
 
-        public static int registrarEnTablaEmision(ParMaquinaProceso asa) {
-            return nucleo.registrarTablaEmision(asa);
-        }
+    public static int registrarEnTablaEmision(ParMaquinaProceso asa) {
+        return nucleo.registrarTablaEmision(asa);
+    }
+
+	public static void solicitarBuzon(int dameID) {
+		nucleo.solicitarBuzon(dameIdProceso());	
+	}
+
 }

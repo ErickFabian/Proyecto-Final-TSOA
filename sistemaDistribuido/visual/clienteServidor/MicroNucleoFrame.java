@@ -45,7 +45,7 @@ public class MicroNucleoFrame extends Frame implements WindowListener, Escribano
         add("North", destinatario);
         add("Center", informador);
         add("South", construirPanelSur());
-        setSize(600, 300);
+        setSize(800, 300);
         addWindowListener(this);
     }
 
@@ -121,6 +121,12 @@ public class MicroNucleoFrame extends Frame implements WindowListener, Escribano
             }
             else if(com.equals("Servidor Alex")){
                 levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ServidorFrame(MicroNucleoFrame.this));
+            }
+            else if(com.equals("Cliente Eduardo")){
+                levantarProcesoFrame(new baseCSv2.sistemaDistribuido.visual.Eduardo.ClienteFrame(MicroNucleoFrame.this));
+            }
+            else if(com.equals("Servidor Eduardo")){
+                levantarProcesoFrame(new baseCSv2.sistemaDistribuido.visual.Eduardo.ServidorFrame(MicroNucleoFrame.this));
             }
         }          
     }

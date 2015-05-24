@@ -58,6 +58,8 @@ public class ProcesoServidor extends Proceso{
             
             idUnico = ConectorDNS.exportarInterfaz("Server Alex", "1.0", asa);
             
+            Nucleo.solicitarBuzon(dameID());
+            
             while(continuar()){
                 imprimeln("Invocando a receive");
                 Nucleo.receive(dameID(),solServidor);
@@ -76,6 +78,7 @@ public class ProcesoServidor extends Proceso{
                 imprimeln("llenando los campos necesarios");
                 imprimeln("Señalando al núcleo para ser envío de mensaje");
                 imprimeln("enviando respuesta");
+                Pausador.pausa(2000);
                 Nucleo.send(merge_bytes_int(solServidor),respServidor);
             }
             

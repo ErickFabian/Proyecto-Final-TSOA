@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Timer;
+import java.util.TimerTask;
 import sistemaDistribuido.sistema.clienteServidor.modoMonitor.MicroNucleoBase;
 import sistemaDistribuido.sistema.clienteServidor.modoUsuario.Proceso;
 
@@ -21,12 +23,20 @@ public final class MicroNucleo extends MicroNucleoBase{
   private static MicroNucleo nucleo=new MicroNucleo();
         Hashtable< Integer, ObjectForRequest > TablaEmision= new Hashtable<Integer, ObjectForRequest>();
         Hashtable< Integer, ObjectForRequest > TablaRecepcion = new Hashtable<Integer, ObjectForRequest>();
-
+        private AdministradorBuzon adminBuzon = new AdministradorBuzon();
+        private AdminReenvios adminReenvios = new AdminReenvios();
+    	private Timer timerReenvios = new Timer();
+        
   /**
    * 
    */
   private MicroNucleo(){
   }
+  
+  protected void solicitarBuzon(int idProceso){
+		adminBuzon.solicitarBuzon(idProceso);
+	}
+
 
   /**
    * 
@@ -109,8 +119,26 @@ public final class MicroNucleo extends MicroNucleoBase{
         
   protected void receiveVerdadero(int addr,byte[] message){
     ObjectForRequest object= new ObjectForRequest(addr,"127.0.0.1",message);
-    TablaRecepcion.put(object.id, object);
-    suspenderProceso();
+    Buzon buzon;
+    System.out.println("receive Verdadero");
+    if ((buzon = adminBuzon.existeBuzon(addr)) == null){
+		TablaRecepcion.put(object.id, object);
+		suspenderProceso();
+	}
+    else
+    {
+		imprimeln("Buscando mensaje en Buzon de servidor: " + addr);
+		if(buzon.estaVacio()){
+			imprimeln("Buzon vacio, servidor en espera de solicitud");
+			TablaRecepcion.put(object.id, object);
+			suspenderProceso();
+		}
+		else{
+			byte[] buffer = buzon.dameMensaje();
+			imprimeln("Tomando mensaje de cliente: "+buffer[0]);
+			System.arraycopy(buffer, 0, message, 0, buffer.length);
+		}
+	}
   }
         
   /**
@@ -146,6 +174,35 @@ public final class MicroNucleo extends MicroNucleoBase{
   /**
    * 
    */
+  
+  class ReenviarSolicitud extends TimerTask{
+		Mensaje destinoConMensaje;
+		DatagramPacket dpReenvio;
+		DatagramSocket socketEmision = dameSocketEmision();
+
+		public ReenviarSolicitud(Mensaje destinoConMensaje) {
+			this.destinoConMensaje = destinoConMensaje;
+		}
+		
+		@Override
+		public void run() {
+			ParMaquinaProceso pmp = destinoConMensaje.dameParMaquinaProceso();
+			byte[] mensaje = destinoConMensaje.dameMensaje();
+			imprimeln("Reenviando mensaje por la red a IP: " + pmp.dameIP() + " proceso: " + pmp.dameID());
+			try {
+				dpReenvio = new DatagramPacket (mensaje, mensaje.length, InetAddress.getByName(pmp.dameIP()), damePuertoRecepcion());
+				socketEmision.send(dpReenvio);
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+  
   public void run(){
       byte[] buffer=new byte[1024];
       while(seguirEsperandoDatagramas())
@@ -161,14 +218,56 @@ public final class MicroNucleo extends MicroNucleoBase{
               int id_origin = merge_bytes_int(buffer, 0, 4);
               int id_server = merge_bytes_int(buffer, 4, 8);
               Proceso process = dameProcesoLocal(id_server);
-              if(TablaRecepcion.containsKey(id_server))
-              {
-                ObjectForRequest object=new ObjectForRequest(id_origin,dp.getAddress().toString(),new byte[1024]);
-                TablaEmision.put(object.id, object);
-                System.arraycopy(dp.getData(),0,TablaRecepcion.get(id_server).message, 0,dp.getData().length);
-                TablaRecepcion.remove(id_server);
-                reanudarProceso(process);
+             
+              //AU
+              if (buffer[1023] == -1){
+					System.arraycopy(buffer, 0, TablaRecepcion.remove(id_server), 0, buffer.length);
+					nucleo.reanudarProceso(process);
+					continue;
               }
+              
+              //TA
+              if (buffer[1023] == -2){
+					imprimeln("Mensaje TA recibido desde: " + id_origin + " reintentando reenvio de mensaje");
+					timerReenvios.schedule(new ReenviarSolicitud(adminReenvios.dameMensajeAReenviar(id_server)),5000);
+					continue;
+				}
+              
+              ObjectForRequest object=new ObjectForRequest(id_origin,dp.getAddress().toString(),new byte[1024]);
+              if(!process_is_not_local(process))
+              {
+	              if(TablaRecepcion.containsKey(id_server))
+	              {
+	                //ObjectForRequest object=new ObjectForRequest(id_origin,dp.getAddress().toString(),new byte[1024]);
+	                TablaEmision.put(object.id, object);
+	                System.arraycopy(dp.getData(),0,TablaRecepcion.get(id_server).message, 0,dp.getData().length);
+	                TablaRecepcion.remove(id_server);
+	                reanudarProceso(process);
+	              }
+	              else{
+	            	  Buzon buzon = adminBuzon.dameBuzon(id_server);
+						if(buzon.dameEspacioDisponible() > 0){
+							imprime("Guardando Mensaje de cliente: " + id_origin + " en Buzon del servidor: " + id_server);
+							byte[] mensajeBuzon = new byte[1024];
+							System.arraycopy(buffer, 0, mensajeBuzon,0, buffer.length);
+							TablaEmision.put(object.id, object);
+							buzon.insertaMensaje(mensajeBuzon);
+							adminBuzon.insertaBuzon(id_server, buzon);
+						}
+						else{
+							/*adminBuzon.insertaBuzon(id_server, buzon);
+							String mensajeTA = "Intentar de Nuevo (Try Again)";
+							DatagramSocket socketEmision = dameSocketEmision();
+							buffer[0] = (byte)destino;
+							buffer[4] = (byte) origen;
+							buffer[8] = (byte) mensajeTA.length();
+							buffer[1023] = (byte) -2;
+							imprimeln ("Enviando mensaje a " + origen);
+							DatagramPacket dpAU = new DatagramPacket (buffer, buffer.length, InetAddress.getByName(ip), damePuertoRecepcion());
+							socketEmision.send(dpAU);*/
+						}
+	              }
+	          }
               else 
               {
                 if(process_is_not_local(process))
