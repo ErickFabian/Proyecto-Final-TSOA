@@ -1,7 +1,7 @@
 /*Morales Guzman Jose Eduardo
  *Codigo: 207452411
  *Seccion D03
- *Practica  5
+ *Practica 5
  */
 
 package sistemaDistribuido.sistema.clienteServidor.modoMonitor;

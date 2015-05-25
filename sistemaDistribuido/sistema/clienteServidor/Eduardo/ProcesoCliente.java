@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package baseCSv2.sistemaDistribuido.sistema.clienteServidor.Eduardo;
+package sistemaDistribuido.sistema.clienteServidor.Eduardo;
 import java.nio.charset.Charset;
 
 import sistemaDistribuido.sistema.clienteServidor.modoMonitor.Nucleo;
@@ -44,11 +44,15 @@ public class ProcesoCliente extends Proceso{
 		byte[] arregloAuxiliar = texto.getBytes(Charset.forName("UTF-8"));
 		imprimeln("Generando mensaje a ser enviado");
 		pack_request(solCliente);
+		do{
 		imprimeln("Señalamiento al núcleo para envío de mensaje");
                 String server_name = "Server Eduardo";
                 Nucleo.send(server_name, solCliente);
 		imprimeln("Invocando a receive()");
 		Nucleo.receive(dameID(),respCliente);
+		if((int)respCliente[1023]==-5)
+        	imprimeln("Re-enviando");
+        }while((int)respCliente[1023]==-5);
 		imprimeln("Procesando respuesta recibida del servidor");
 		switch(respCliente[1023]){
 			case -1:

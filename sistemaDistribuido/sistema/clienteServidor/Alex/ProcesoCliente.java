@@ -43,11 +43,15 @@ public class ProcesoCliente extends Proceso{
             solCliente[8]=(byte)mabu.length();
             solCliente[10]=(byte)m1;
             System.arraycopy(mabu.getBytes(),0,solCliente,12,mabu.length());
+            do{
             imprimeln("Señalando al núcleo para envío de mensaje");
             String alex_server = "Server Alex";
             Nucleo.send(alex_server,solCliente);
             imprimeln("Invocano a receive");
             Nucleo.receive(dameID(),respCliente);
+            if((int)respCliente[1023]==-5)
+            	imprimeln("Re-enviando");
+            }while((int)respCliente[1023]==-5);
             imprimeln("Procesando respuesta recibida del servidor");
             tope=(int)respCliente[8];
             for(i=0,contador=10;i<tope;i++,contador++)

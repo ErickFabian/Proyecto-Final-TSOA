@@ -37,7 +37,7 @@ public class MicroNucleoFrame extends Frame implements WindowListener, Escribano
     private ServidorNombres conector;
 
     public MicroNucleoFrame() {
-        super("Practica 5 Servidor de Nombres");
+        super("Proyecto Final Alex, Jose y Erick");
         setLayout(new BorderLayout());
         informador = new PanelInformador();
         destinatario = new PanelIPID();
@@ -123,10 +123,10 @@ public class MicroNucleoFrame extends Frame implements WindowListener, Escribano
                 levantarProcesoFrame(new sistemaDistribuido.visual.Alex.ServidorFrame(MicroNucleoFrame.this));
             }
             else if(com.equals("Cliente Eduardo")){
-                levantarProcesoFrame(new baseCSv2.sistemaDistribuido.visual.Eduardo.ClienteFrame(MicroNucleoFrame.this));
+                levantarProcesoFrame(new sistemaDistribuido.visual.Eduardo.ClienteFrame(MicroNucleoFrame.this));
             }
             else if(com.equals("Servidor Eduardo")){
-                levantarProcesoFrame(new baseCSv2.sistemaDistribuido.visual.Eduardo.ServidorFrame(MicroNucleoFrame.this));
+                levantarProcesoFrame(new sistemaDistribuido.visual.Eduardo.ServidorFrame(MicroNucleoFrame.this));
             }
         }          
     }

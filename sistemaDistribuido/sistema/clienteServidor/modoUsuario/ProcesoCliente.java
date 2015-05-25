@@ -34,11 +34,15 @@ public class ProcesoCliente extends Proceso{
         byte[] respCliente=new byte[1024];
         imprimeln("Generando mensaje a ser enviado, llenando los campos necesarios");
         pack_request(solCliente);
+        do{
         imprimeln("Señalamiento al nucleo para envio de mensaje");
         String server_name = "Server Erick";
         Nucleo.send(server_name,solCliente);
         imprimeln("Invocando Receive");
         Nucleo.receive(dameID(),respCliente);
+        if((int)respCliente[1023]==-5)
+        	imprimeln("Re-enviando");
+        }while((int)respCliente[1023]==-5);
         imprimeln("Procesando peticion recibida del servidor.");
         imprimeln("El mensaje de respuesta del servidor es:"+unpack_string(respCliente));
     }

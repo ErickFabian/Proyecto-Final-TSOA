@@ -4,10 +4,10 @@
  *Practica 1
  */
 
-package baseCSv2.sistemaDistribuido.visual.Eduardo;
+package sistemaDistribuido.visual.Eduardo;
 
 import sistemaDistribuido.sistema.clienteServidor.modoMonitor.Nucleo;
-import baseCSv2.sistemaDistribuido.sistema.clienteServidor.Eduardo.ProcesoCliente;
+import sistemaDistribuido.sistema.clienteServidor.Eduardo.ProcesoCliente;
 import sistemaDistribuido.visual.clienteServidor.MicroNucleoFrame;
 import sistemaDistribuido.visual.clienteServidor.ProcesoFrame;
 import java.awt.Label;

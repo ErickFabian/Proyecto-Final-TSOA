@@ -1,9 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
  */
-package baseCSv2.sistemaDistribuido.sistema.clienteServidor.Eduardo;
+package sistemaDistribuido.sistema.clienteServidor.Eduardo;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -91,7 +89,7 @@ public class ProcesoServidor extends Proceso{
 				x++;
 				y++;
 			}*/
-			Pausador.pausa(5000);  //sin esta línea es posible que Servidor solicite send antes que Cliente solicite receive
+			Pausador.pausa(2000);  //sin esta línea es posible que Servidor solicite send antes que Cliente solicite receive
 			imprimeln("Señalamiento al núcleo para envío de mensaje");
 			/*respServidor[0] = solServidor[4];
 			respServidor[4] = solServidor[0];

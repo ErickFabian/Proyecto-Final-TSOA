@@ -26,7 +26,8 @@ public final class MicroNucleo extends MicroNucleoBase{
         private AdministradorBuzon adminBuzon = new AdministradorBuzon();
         private AdminReenvios adminReenvios = new AdminReenvios();
     	private Timer timerReenvios = new Timer();
-        
+        private Hashtable<Integer,byte[]> TablaTemporal=new Hashtable<Integer,byte[]>();
+        private byte[] aux;
   /**
    * 
    */
@@ -127,17 +128,29 @@ public final class MicroNucleo extends MicroNucleoBase{
 	}
     else
     {
-		imprimeln("Buscando mensaje en Buzon de servidor: " + addr);
-		if(buzon.estaVacio()){
-			imprimeln("Buzon vacio, servidor en espera de solicitud");
-			TablaRecepcion.put(object.id, object);
-			suspenderProceso();
+	 imprimeln("Buscando mensaje en Buzon de servidor: " + addr);		
+	 if(!buzon.estaVacio())
+	  {
+		byte[] buffer = buzon.dameMensaje();
+		imprimeln("Tomando mensaje de cliente: " + merge_bytes_int(buffer, 0, 4));
+		System.arraycopy(buffer, 0, message, 0, buffer.length);
 		}
-		else{
-			byte[] buffer = buzon.dameMensaje();
-			imprimeln("Tomando mensaje de cliente: "+buffer[0]);
-			System.arraycopy(buffer, 0, message, 0, buffer.length);
-		}
+	 else
+	  {
+	  aux=new byte[1024];
+	  if(TablaTemporal.get(addr)!=null)
+	   {
+	    aux=TablaTemporal.get(addr);
+	    TablaTemporal.remove(addr);
+	    System.arraycopy(aux, 0, message, 0, aux.length);
+	   }
+  	 else
+	  {
+	   TablaRecepcion.put(object.id, object);
+	   suspenderProceso();
+	  }
+	}
+		
 	}
   }
         
@@ -255,6 +268,23 @@ public final class MicroNucleo extends MicroNucleoBase{
 							adminBuzon.insertaBuzon(id_server, buzon);
 						}
 						else{
+							
+							 if(TablaTemporal.get(id_origin)==null)
+		 					  {
+		 					   TablaTemporal.put(id_origin,dp.getData());
+		 					   //ObjectForRequest object=new ObjectForRequest(id_origin,dp.getAddress().toString(),new byte[1024]);
+		 		               TablaEmision.put(object.id, object);
+		 					   sleep(3000);
+		 					   if(TablaTemporal.get(id_origin)!=null)
+		 						{
+		 						 TablaTemporal.remove(id_origin);
+		 						 System.arraycopy(dp.getData(),0,aux,0,dp.getData().length);
+		 						 aux[1023]=(byte)-5;
+		 						 System.arraycopy(aux,0,TablaRecepcion.get(id_origin).message, 0,aux.length);
+		 						 process = dameProcesoLocal(id_origin);
+		 						 reanudarProceso(process);
+		 						}
+		 					  } 
 							/*adminBuzon.insertaBuzon(id_server, buzon);
 							String mensajeTA = "Intentar de Nuevo (Try Again)";
 							DatagramSocket socketEmision = dameSocketEmision();

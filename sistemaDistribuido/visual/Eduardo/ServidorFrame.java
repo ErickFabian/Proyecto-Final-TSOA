@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package baseCSv2.sistemaDistribuido.visual.Eduardo;
+package sistemaDistribuido.visual.Eduardo;
 
-import baseCSv2.sistemaDistribuido.sistema.clienteServidor.Eduardo.ProcesoServidor;
+import sistemaDistribuido.sistema.clienteServidor.Eduardo.ProcesoServidor;
 import sistemaDistribuido.visual.clienteServidor.MicroNucleoFrame;
 import sistemaDistribuido.visual.clienteServidor.ProcesoFrame;
 

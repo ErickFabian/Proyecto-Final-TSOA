@@ -73,12 +73,11 @@ public class ProcesoServidor extends Proceso{
                 respServidor=new byte[1024];
                 datos=Archivos(codop,solServidor,respServidor,((int)solServidor[0]),((int)solServidor[4]));
                 imprimeln("el cliente solicitó: "+datos);
-                Pausador.pausa(1000);  //sin esta l�nea es posible que Servidor solicite send antes que Cliente solicite receive
+                Pausador.pausa(2000);  //sin esta l�nea es posible que Servidor solicite send antes que Cliente solicite receive
                 imprimeln("Generando mensaje a ser enviado");
                 imprimeln("llenando los campos necesarios");
                 imprimeln("Señalando al núcleo para ser envío de mensaje");
                 imprimeln("enviando respuesta");
-                Pausador.pausa(2000);
                 Nucleo.send(merge_bytes_int(solServidor),respServidor);
             }
             

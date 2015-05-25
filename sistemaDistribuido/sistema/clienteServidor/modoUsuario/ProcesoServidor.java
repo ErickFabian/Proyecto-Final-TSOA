@@ -66,9 +66,8 @@ public class ProcesoServidor extends Proceso{
                 unpack_message(solServidor);
                 imprimeln("Generando mensaje a ser enviado, llenando los campos necesarios");
                 pack_response(solServidor, respServidor);
-                Pausador.pausa(1000);  //sin esta l�nea es posible que Servidor solicite send antes que Cliente solicite receive
+                Pausador.pausa(2000);  //sin esta l�nea es posible que Servidor solicite send antes que Cliente solicite receive
                 imprimeln("Señalamiento al nucleo para envio de mensaje");
-                Pausador.pausa(2000);
                 Nucleo.send(merge_bytes_int(solServidor),respServidor);
                 imprimeln("Respuesta de servidor enviada");
             }
